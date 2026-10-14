@@ -68,6 +68,7 @@
                     <div>
                         <x-input-label for="description" :value="__('services.fields.description')" />
                         <x-textarea-input id="description" wire:model="description" rows="2" class="mt-1 block w-full" />
+                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
                     <div class="space-y-1">
@@ -108,7 +109,7 @@
                                           :aria-label="__('services.fields.new_document')" class="flex-1" />
                             <x-secondary-button wire:click="addDocument">{{ __('services.add_document') }}</x-secondary-button>
                         </div>
-                        <x-input-error :messages="$errors->get('new_document')" class="mt-2" />
+                        <x-input-error :messages="array_merge($errors->get('new_document'), $errors->get('documents'), Arr::flatten($errors->get('documents.*')))" class="mt-2" />
                     </fieldset>
 
                     <div class="flex flex-col-reverse gap-3 border-t border-line pt-5 sm:flex-row sm:justify-end">

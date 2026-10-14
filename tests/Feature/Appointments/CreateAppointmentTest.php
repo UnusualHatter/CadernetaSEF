@@ -34,6 +34,12 @@ class CreateAppointmentTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_a_mangled_slot_link_opens_the_form_anyway(): void
+    {
+        $this->get('/atendimentos/novo?inicio=abacaxi&fim=abacaxi')->assertOk();
+        $this->get('/atendimentos/novo?inicio[]=1')->assertOk();
+    }
+
     public function test_the_form_starts_from_the_slot_clicked_in_the_agenda(): void
     {
         $this->get('/atendimentos/novo?inicio=2026-10-05T14:00:00&fim=2026-10-05T15:30:00')->assertOk();

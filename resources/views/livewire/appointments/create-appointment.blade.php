@@ -109,6 +109,7 @@
         <div>
             <x-input-label for="notes" :value="__('appointments.fields.notes')" />
             <x-textarea-input id="notes" wire:model="notes" class="mt-1 block w-full" :placeholder="__('appointments.create.notes_placeholder')" />
+            <x-input-error :messages="$errors->get('notes')" class="mt-2" />
         </div>
     </x-card>
 

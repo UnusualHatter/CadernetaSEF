@@ -1,8 +1,15 @@
 *.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+coverage/
 .DS_Store
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
 .phpactor.json
 .phpunit.result.cache
 /.idea
@@ -11,7 +18,7 @@
 /.vscode
 /.zed
 /auth.json
-/node_modules
+node_modules/
 /public/build
 /build
 /public/fonts-manifest.dev.json

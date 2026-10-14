@@ -128,6 +128,19 @@ class ServiceCatalogTest extends TestCase
         $this->assertSame(['consultoria', 'consultoria-2'], Service::query()->orderBy('id')->pluck('slug')->all());
     }
 
+    public function test_a_checklist_over_the_limit_says_so_on_the_page(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+        $service = Service::factory()->create();
+
+        Livewire::test(ServiceCatalog::class)
+            ->call('edit', $service->id)
+            ->set('documents', array_map(fn (int $position): string => "Documento {$position}", range(1, 31)))
+            ->call('save')
+            ->assertHasErrors(['documents' => 'max'])
+            ->assertSee(__('validation.max.array', ['attribute' => __('validation.attributes.documents'), 'max' => 30]));
+    }
+
     public function test_members_can_not_save_through_the_component(): void
     {
         $this->actingAs(User::factory()->create());

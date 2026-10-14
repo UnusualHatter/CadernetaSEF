@@ -48,6 +48,7 @@
         <div>
             <x-input-label for="notes" :value="__('clients.fields.notes')" />
             <x-textarea-input id="notes" wire:model="form.notes" class="mt-1 block w-full" />
+            <x-input-error :messages="$errors->get('form.notes')" class="mt-2" />
         </div>
 
         <label class="flex min-h-11 items-start gap-3">
