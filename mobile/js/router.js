@@ -51,7 +51,7 @@ function render({ keepScroll = false } = {}) {
     const scroll = keepScroll ? outlet.scrollTop : 0;
     const result = match.view({ params, query, user, state: store.state });
 
-    outlet.innerHTML = `<div class="page ${goingBack && !keepScroll ? 'is-back' : ''} ${match.public ? 'is-public' : ''}">${result.html}</div>`;
+    outlet.innerHTML = `<div class="page ${keepScroll ? 'is-refresh' : goingBack ? 'is-back' : ''} ${match.public ? 'is-public' : ''}">${result.html}</div>`;
     outlet.scrollTop = scroll;
     current = { match, path };
     result.mount?.(outlet.firstElementChild);

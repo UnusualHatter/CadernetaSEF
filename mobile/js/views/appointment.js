@@ -130,7 +130,7 @@ export default function appointmentDetail({ params, state, user }) {
             </section>
 
             <section class="card">
-                <div class="card-head"><h2>Documentos</h2><span class="muted small">${total ? `${received} de ${total} entregues` : ''}</span></div>
+                <div class="card-head"><h2>Documentos</h2><span class="muted small doc-count">${total ? `${received} de ${total} entregues` : ''}</span></div>
                 ${
                     total
                         ? `<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${received}"><i style="width:${(received / total) * 100}%"></i></div>
@@ -165,8 +165,17 @@ export default function appointmentDetail({ params, state, user }) {
 
             root.querySelectorAll('[data-doc]').forEach((button) =>
                 button.addEventListener('click', () => {
-                    store.commit((s, u) => toggleDocument(s, u, appointment.id, Number(button.dataset.doc)));
-                    refresh();
+                    const toggled = store.commit((s, u) => toggleDocument(s, u, appointment.id, Number(button.dataset.doc)));
+                    const done = Boolean(toggled.receivedAt);
+                    const count = appointment.documents.filter((d) => d.receivedAt).length;
+
+                    button.classList.toggle('is-done', done);
+                    button.classList.toggle('just-done', done);
+                    button.setAttribute('aria-checked', String(done));
+                    button.querySelector('.state').textContent = done ? 'Entregue' : 'Pendente';
+                    root.querySelector('.progress i').style.width = `${(count / total) * 100}%`;
+                    root.querySelector('.progress').setAttribute('aria-valuenow', String(count));
+                    root.querySelector('.doc-count').textContent = `${count} de ${total} entregues`;
                 }),
             );
 

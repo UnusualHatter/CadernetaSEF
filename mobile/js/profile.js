@@ -5,8 +5,9 @@ import { can } from './domain.js';
 import { navigate, refresh } from './router.js';
 import { store } from './store.js';
 import { getPreference, setPreference } from './theme.js';
+import { playFarewell, originOf } from './curtain.js';
 import { avatar, confirmDialog, icon, openSheet, toast } from './ui.js';
-import { digits, esc } from './util.js';
+import { digits, esc, firstName } from './util.js';
 
 const THEMES = [
     ['light', 'Claro', 'sun'],
@@ -27,7 +28,7 @@ export function openProfile() {
 
             <div class="menu-label">Aparência</div>
             <div class="seg" role="radiogroup" aria-label="Tema">
-                ${THEMES.map(([value, label]) => `<button type="button" role="radio" aria-checked="${getPreference() === value}" data-theme-option="${value}">${label}</button>`).join('')}
+                ${THEMES.map(([value, label, symbol]) => `<button type="button" role="radio" aria-checked="${getPreference() === value}" data-theme-option="${value}">${icon(symbol)}${label}</button>`).join('')}
             </div>
 
             <div class="menu-label">Ver o app como (demonstração)</div>
@@ -55,7 +56,7 @@ export function openProfile() {
         mount(sheet, close) {
             sheet.querySelectorAll('[data-theme-option]').forEach((button) =>
                 button.addEventListener('click', () => {
-                    setPreference(button.dataset.themeOption);
+                    setPreference(button.dataset.themeOption, button);
                     sheet.querySelectorAll('[data-theme-option]').forEach((b) => b.setAttribute('aria-checked', String(b === button)));
                 }),
             );
@@ -84,10 +85,14 @@ export function openProfile() {
                 refresh();
             });
 
-            sheet.querySelector('#logout').addEventListener('click', () => {
+            sheet.querySelector('#logout').addEventListener('click', (event) => {
+                const origin = originOf(event.currentTarget);
+                const name = firstName(user.name);
                 close();
-                store.logout();
-                navigate('/login');
+                playFarewell(name, origin, () => {
+                    store.logout();
+                    navigate('/login');
+                });
             });
         },
     });

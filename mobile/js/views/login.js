@@ -1,8 +1,9 @@
 import { PROJECT } from '../data.js';
+import { originOf, playWelcome } from '../curtain.js';
 import { logo, toast } from '../ui.js';
 import { navigate } from '../router.js';
 import { store } from '../store.js';
-import { esc } from '../util.js';
+import { esc, firstName } from '../util.js';
 
 export default function login() {
     return {
@@ -46,7 +47,12 @@ export default function login() {
                     error.hidden = false;
                     return;
                 }
+
+                const button = form.querySelector('[type=submit]');
+                button.disabled = true;
+                button.textContent = 'Entrando…';
                 navigate('/');
+                playWelcome(firstName(user.name), originOf(button));
             });
 
             root.querySelector('#forgot').addEventListener('click', () =>

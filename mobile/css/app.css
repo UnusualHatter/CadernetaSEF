@@ -393,6 +393,15 @@ svg { display: block; flex-shrink: 0; }
 .btn-sm { min-height: 44px; padding: 0 16px; font-size: 14.5px; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 
+.chip, .icon-btn, .tile, .choice, .seg button, .day-btn, .pill-link, .doc, .toggle-row, .menu-item, .service-row {
+    transition: transform 160ms var(--ease), background-color 160ms, color 160ms, border-color 160ms;
+}
+
+.chip:active:not(:disabled), .icon-btn:active, .tile:active, .choice:active, .seg button:active,
+.day-btn:active, .pill-link:active, .toggle-row:active { transform: scale(0.96); }
+.doc:active:not(:disabled), .menu-item:active, .service-row:active { transform: scale(0.985); }
+.tab:active { transform: scale(0.94); }
+
 /* ---------- badges, chips, segmented ---------- */
 
 .badge {
@@ -450,6 +459,10 @@ svg { display: block; flex-shrink: 0; }
 }
 
 .seg button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     flex: 1;
     min-height: 40px;
     padding: 4px 8px;
@@ -1030,3 +1043,89 @@ svg { display: block; flex-shrink: 0; }
 .doc-edit span { flex: 1; min-width: 0; }
 .add-doc { display: flex; gap: 8px; margin-top: 12px; }
 .add-doc .input { flex: 1; }
+
+/* ---------- motion ---------- */
+
+.seg button svg { width: 16px; height: 16px; transition: transform 520ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+.seg button[aria-checked='true'] svg { transform: scale(1.15) rotate(-12deg); }
+
+.doc .mark svg path {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 320ms var(--ease) 60ms;
+}
+
+.doc.is-done .mark svg path { stroke-dashoffset: 0; }
+
+@keyframes check-pop { 40% { transform: scale(1.18); } }
+
+/* Switching theme changes every token at once; only the reveal animates. */
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after { transition: none !important; }
+
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+.curtain {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    background: radial-gradient(circle at 50% 42%, var(--surface), var(--sand) 55%, var(--canvas));
+}
+
+.curtain-content { display: grid; justify-items: center; gap: 10px; padding: 0 24px; text-align: center; }
+.curtain-logo { width: 84px; height: 84px; color: var(--primary); }
+.curtain-logo .logo-arrows,
+.curtain-logo .logo-coin { transform-origin: 24px 24px; }
+.curtain-title { font-family: var(--font-display); font-size: 34px; line-height: 1.1; font-variation-settings: 'SOFT' 100; }
+.curtain-subtitle { font-size: 17px; color: var(--ink-muted); }
+
+@media (prefers-reduced-motion: no-preference) {
+    .page.is-refresh, .page.is-refresh .rise { animation: none; }
+
+    /* Signing in: the curtain grows from the button, holds, then closes onto the agenda. */
+    .curtain--welcome {
+        animation:
+            curtain-enter 600ms cubic-bezier(0.65, 0, 0.35, 1) both,
+            curtain-leave 1000ms cubic-bezier(0.65, 0, 0.35, 1) 1900ms forwards;
+    }
+
+    .curtain--farewell { animation: curtain-enter 700ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+    .curtain--signedout { animation: curtain-leave 1000ms cubic-bezier(0.65, 0, 0.35, 1) 900ms both; }
+
+    .curtain--welcome .logo-arrows, .curtain--farewell .logo-arrows { animation: logo-turn 1500ms cubic-bezier(0.65, 0, 0.35, 1) 350ms both; }
+    .curtain--signedout .logo-arrows { animation: logo-turn 1500ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+    .curtain--welcome .logo-coin, .curtain--farewell .logo-coin { animation: logo-coin 800ms var(--ease) 650ms both; }
+    .curtain--signedout .logo-coin { animation: logo-coin 800ms var(--ease) 300ms both; }
+    .curtain--welcome .curtain-title, .curtain--farewell .curtain-title { animation: rise 800ms var(--ease) 700ms both; }
+    .curtain--welcome .curtain-subtitle, .curtain--farewell .curtain-subtitle { animation: rise 800ms var(--ease) 950ms both; }
+    .curtain--signedout .curtain-title { animation: rise 800ms var(--ease) 350ms both; }
+    .curtain--signedout .curtain-subtitle { animation: rise 800ms var(--ease) 600ms both; }
+
+    #app.is-welcoming #view,
+    #app.is-welcoming #tabbar { animation: rise 900ms var(--ease) 2200ms both; }
+
+    .doc.just-done .mark { animation: check-pop 360ms var(--ease); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .curtain { display: none; }
+    .doc .mark svg path, .seg button svg { transition: none; }
+}
+
+@keyframes curtain-enter {
+    from { clip-path: circle(0 at var(--origin-x, 50%) var(--origin-y, 50%)); }
+    to { clip-path: circle(150vmax at var(--origin-x, 50%) var(--origin-y, 50%)); }
+}
+
+@keyframes curtain-leave {
+    from { clip-path: circle(150vmax at 50% 42%); }
+    to { clip-path: circle(0 at 50% 42%); }
+}
+
+@keyframes logo-turn { from { transform: rotate(-270deg) scale(0.7); opacity: 0; } }
+@keyframes logo-coin { from { transform: scale(0.4); opacity: 0; } }
