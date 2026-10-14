@@ -26,7 +26,7 @@ O modo instalável e o uso sem internet só funcionam em HTTPS ou em `localhost`
 
 O workflow `.github/workflows/preview.yml` já publica o app no GitHub Pages a cada
 push na `main`, junto com a prévia do sistema web:
-`https://unusualhatter.github.io/Agenda-Contabil/app/`. Abra esse endereço no
+`https://unusualhatter.github.io/CadernetaSEF/app/`. Abra esse endereço no
 Chrome do celular, abra o menu e escolha "Instalar app" ou "Adicionar à tela
 inicial". Depois de aberto uma vez, ele funciona offline.
 
