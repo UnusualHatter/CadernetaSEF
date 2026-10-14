@@ -23,8 +23,10 @@ uma moldura de celular. No celular, abra `http://<ip do notebook>:8080` (os dois
 na mesma rede Wi-Fi).
 
 O modo instalável e o uso sem internet só funcionam em HTTPS ou em `localhost`.
-Para a apresentação, o jeito mais simples é publicar a pasta `mobile/` em
-qualquer hospedagem estática (GitHub Pages, Netlify, Vercel): abra o endereço no
+
+O workflow `.github/workflows/preview.yml` já publica o app no GitHub Pages a cada
+push na `main`, junto com a prévia do sistema web:
+`https://unusualhatter.github.io/Agenda-Contabil/app/`. Abra esse endereço no
 Chrome do celular, abra o menu e escolha "Instalar app" ou "Adicionar à tela
 inicial". Depois de aberto uma vez, ele funciona offline.
 

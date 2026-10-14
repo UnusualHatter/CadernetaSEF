@@ -84,6 +84,11 @@ jobs:
       - name: Export static preview
         run: php artisan preview:export "${{ steps.pages.outputs.base_url }}"
 
+      - name: Add mobile app
+        run: |
+          mkdir build/preview/app
+          cp -r mobile/index.html mobile/manifest.webmanifest mobile/sw.js mobile/css mobile/fonts mobile/icons mobile/js build/preview/app/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
